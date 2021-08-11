@@ -19,11 +19,6 @@ def eulerian(*args):
             vertex_edges = list(vertex.edges.keys())
             edges += vertex_edges
         
-        #if first_vertex not in edges or last_vertex not in edges:
-           #print("There is no Eulerian Path nor Cycle")
-           #continue 
-            
-        
         vertices = list(graph_dict.keys())
 
         for vertex in vertices:
