@@ -85,7 +85,26 @@ def eulerian(*args):
             vertex[-1] = current_vertex_edges
             updated_graph_dict[vertex[0]] = current_vertex_edges
 
-        eulerian_paths = eulerian_path_checker(updated_graph_dict, paths)[:2]
+        eulerian_paths = eulerian_path_checker(updated_graph_dict, paths)
+
+        lst_values = []
+        for lst in list(updated_graph_dict.values()):
+            lst_values.append(len(lst))
+        
+        biggest_lst = max(lst_values)
+        biggest_vertex = None 
+
+        for vertex in updated_graph_dict.keys():
+            if len(updated_graph_dict[vertex]) == biggest_lst:
+                biggest_vertex = vertex 
+                break
+        
+        selected_eulerian_paths = []
+        for path in eulerian_paths:
+            if path[0] == biggest_vertex:
+                selected_eulerian_paths.append(path)
+        
+        eulerian_paths = selected_eulerian_paths
 
         if eulerian_paths:
             for path in eulerian_paths:
