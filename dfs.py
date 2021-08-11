@@ -1,5 +1,5 @@
 
-def dfs(graph, current_vertex, edges, prev_vertex=None, visited=None):
+def dfs(graph, current_vertex, edges, last_edge, last_vertex, prev_vertex=None, visited=None):
     edges_vertices = (list(graph.values()))
 
     lst_values = []
@@ -23,13 +23,18 @@ def dfs(graph, current_vertex, edges, prev_vertex=None, visited=None):
         return visited 
     else:
         for neighbour in graph[current_vertex]:
+            if last_edge == None:
+                if neighbour == last_vertex:
+                    edges['last_element'] = True
+            else:
+                if neighbour == last_edge:
+                    if visited[-1] == last_vertex:
+                        edges['last_element'] = True
             if neighbour == prev_vertex:
                 continue
             if not neighbour in visited or neighbour == biggest_edge:
-                new_path = dfs(graph, neighbour, edges, current_vertex, visited)
+                new_path = dfs(graph, neighbour, edges, last_edge, last_vertex, current_vertex, visited)
             
-
-
                 if new_path:
                     return new_path 
     
