@@ -85,6 +85,7 @@ def eulerian(*args):
         lst_values = []
         for lst in list(updated_graph_dict.values()):
             lst_values.append(len(lst))
+            
         
         biggest_lst = max(lst_values)
         biggest_vertex = None 
@@ -98,6 +99,12 @@ def eulerian(*args):
         for path in eulerian_paths:
             if path[0] == biggest_vertex:
                 selected_eulerian_paths.append(path)
+
+        even_degree_counter = 0
+
+        for degree in lst_values:
+            if degree % 2 == 0:
+                even_degree_counter += 1
         
         eulerian_paths = selected_eulerian_paths
 
@@ -105,16 +112,18 @@ def eulerian(*args):
             for path in eulerian_paths:
                 print("The graph has an Eulerian Path: {}".format(path))
 
-            eulerian_cycles = eulerian_cycle(updated_graph_dict, eulerian_paths)
+            if even_degree_counter == len(lst_values):
 
-            if eulerian_cycles:                                                                #Eulerian Cycle
-                for cycle in eulerian_cycles:
-                    print("The graph has an Eulerian Cycle: {}".format(cycle))
+                eulerian_cycles = eulerian_cycle(updated_graph_dict, eulerian_paths)
+
+                if eulerian_cycles:                                                                #Eulerian Cycle
+                    for cycle in eulerian_cycles:
+                        print("The graph has an Eulerian Cycle: {}".format(cycle))
             else:
                 print("The graph does not have any Eulerian Cycles")
         else:
             print("The graph does not have any Eulerian Paths")
-        
+            
 
 def eulerian_path_checker(graph, paths):
     eulerian_paths = []
