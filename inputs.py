@@ -26,6 +26,16 @@ g1.add_edge(zero, two)
 g1.add_edge(two, one)
 g1.add_edge(zero, three)
 g1.add_edge(three, four)
+g1.add_edge(one, three)
 
+
+# Second Graph 
+
+g2 = Graph()
+g2.add_vertex(zero)
+g2.add_vertex(one)
+g2.add_vertex(two)
+g2.add_vertex(three)
+g2.add_vertex(four)
 
 
