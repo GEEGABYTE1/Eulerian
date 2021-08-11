@@ -25,6 +25,7 @@ def eulerian(graph_dict):
     for vertex in vertices:
         if not vertex in edges:
             graph_dict.pop(vertex)
+
     
     odd_degree_counter = 0                                 # Edge Case 2
     for vertex, edge in graph_dict.items():
@@ -42,6 +43,17 @@ def eulerian(graph_dict):
     if odd_degree_counter > 2:
         print("There is no Eulerian Path")
         return 
+
+    empty_edges = 0
+    edges_lst = list(updated_graph_dict.values())
+    for i in edges_lst:
+        if len(i) == 0:
+            empty_edges += 1
+    
+    if empty_edges == len(edges_lst):
+        print("The Graph is Eulerian")
+        return
+    
     
     sets = [[vertex, edge] for vertex, edge in updated_graph_dict.items()]          #Eulerian Path
     
@@ -52,8 +64,14 @@ def eulerian(graph_dict):
             for number in lst[-1]:
                 if not number in edges_dict:
                     edges_dict[number] = False
+        edges_dict['last_element'] = False
         while len(vertex[-1]) != 0:
-            output = dfs(updated_graph_dict, vertex[0], edges_dict)
+            if len(sets[-1][-1]) <= 1:
+                last_edge = None 
+            else: 
+                last_edge = sets[-1][-1][-1]
+            last_vertex = sets[-1][0]
+            output = dfs(updated_graph_dict, vertex[0], edges_dict, last_edge, last_vertex)
             
             paths.append(output)
             vertex[-1].pop(0)
@@ -72,7 +90,7 @@ def eulerian(graph_dict):
         eulerian_cycles = eulerian_cycle(updated_graph_dict, eulerian_paths)
 
         if eulerian_cycles:                                                                #Eulerian Cycle
-            for cycle in eulerian_cycle:
+            for cycle in eulerian_cycles:
                 print("The graph has an Eulerian Cycle: {}".format(cycle))
         else:
             print("The graph does not have any Eulerian Cycles")
@@ -116,13 +134,16 @@ def eulerian_cycle(graph, el_paths):
         last_vertex = list(graph.keys())[-1]
         first_vertex = path[0]
         if first_vertex in graph[last_vertex]:
-            path += [first_vertex]
+            if path[-1] != first_vertex:
+                path += [first_vertex]
             cycles.append(path)
         else:
             continue
     
     if len(cycles) == 0:
         return None
+    else:
+        return cycles
 
     
 
