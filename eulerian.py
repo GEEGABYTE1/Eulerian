@@ -1,102 +1,106 @@
 from dfs import dfs 
 
-from inputs import g1
+from inputs import g1, g2
 
 paths = []
 
-def eulerian(graph_dict):
-    graph_dict = g1.graph_dict
-    first_vertex = list(graph_dict.keys())[0]
-    last_vertex = list(graph_dict.keys())[-1]
-    updated_graph_dict = {}
+def eulerian(*args):
+    graphs = args 
+    for graph in graphs:
+        print("-"*24 + "\n")
+        graph_dict = graph.graph_dict
+        first_vertex = list(graph_dict.keys())[0]
+        last_vertex = list(graph_dict.keys())[-1]
+        updated_graph_dict = {}
 
-    edges_object = list(graph_dict.values())                # Edge Case 1
-    edges = []
-    for vertex in edges_object:
-        vertex_edges = list(vertex.edges.keys())
-        edges += vertex_edges
-    
-    if first_vertex not in edges or last_vertex not in edges:
-        print("There is no Eulerian Path nor Cycle")
-        return None
-    
-    vertices = list(graph_dict.keys())
-
-    for vertex in vertices:
-        if not vertex in edges:
-            graph_dict.pop(vertex)
-
-    
-    odd_degree_counter = 0                                 # Edge Case 2
-    for vertex, edge in graph_dict.items():
-        edges = list(edge.edges.keys())
-        updated_graph_dict[vertex] = edges
-        vertices_sum = 0 
-        for edge in edges:
-            vertices_sum += edge 
+        edges_object = list(graph_dict.values())                # Edge Case 1
+        edges = []
+        for vertex in edges_object:
+            vertex_edges = list(vertex.edges.keys())
+            edges += vertex_edges
         
-        if vertices_sum % 2 == 1:
-            odd_degree_counter += 1 
-        else:
-            continue
-
-    if odd_degree_counter > 2:
-        print("There is no Eulerian Path")
-        return 
-
-    empty_edges = 0
-    edges_lst = list(updated_graph_dict.values())
-    for i in edges_lst:
-        if len(i) == 0:
-            empty_edges += 1
-    
-    if empty_edges == len(edges_lst):
-        print("The Graph is Eulerian")
-        return
-    
-    
-    sets = [[vertex, edge] for vertex, edge in updated_graph_dict.items()]          #Eulerian Path
-    
-    for vertex in sets:
-        edges_dict = {}
-        current_vertex_edges = vertex[-1][:]
-        for lst in sets:
-            for number in lst[-1]:
-                if not number in edges_dict:
-                    edges_dict[number] = False
-        edges_dict['last_element'] = False
-        while len(vertex[-1]) != 0:
-            if len(sets[-1][-1]) <= 1:
-                last_edge = None 
-            else: 
-                last_edge = sets[-1][-1][-1]
-            last_vertex = sets[-1][0]
-            output = dfs(updated_graph_dict, vertex[0], edges_dict, last_edge, last_vertex)
+        #if first_vertex not in edges or last_vertex not in edges:
+           #print("There is no Eulerian Path nor Cycle")
+           #continue 
             
-            paths.append(output)
-            vertex[-1].pop(0)
-            for key in edges_dict.keys():
-                edges_dict[key] = False
         
-        vertex[-1] = current_vertex_edges
-        updated_graph_dict[vertex[0]] = current_vertex_edges
+        vertices = list(graph_dict.keys())
 
-    eulerian_paths = eulerian_path_checker(updated_graph_dict, paths)[:2]
+        for vertex in vertices:
+            if not vertex in edges:
+                graph_dict.pop(vertex)
 
-    if eulerian_paths:
-        for path in eulerian_paths:
-            print("The graph has an Eulerian Path: {}".format(path))
+        
+        odd_degree_counter = 0                                 # Edge Case 2
+        for vertex, edge in graph_dict.items():
+            edges = list(edge.edges.keys())
+            updated_graph_dict[vertex] = edges
+            vertices_sum = 0 
+            for edge in edges:
+                vertices_sum += edge 
+            
+            if vertices_sum % 2 == 1:
+                odd_degree_counter += 1 
+            else:
+                continue      
 
-        eulerian_cycles = eulerian_cycle(updated_graph_dict, eulerian_paths)
+        empty_edges = 0                                         # Edge Case 3
+        edges_lst = list(updated_graph_dict.values())
+        for i in edges_lst:
+            if len(i) == 0:
+                empty_edges += 1
+        
+        if empty_edges == len(edges_lst):
+            print("The Graph is Eulerian")
+            continue 
+        elif odd_degree_counter > 2:
+            print("There is no Eulerian Path")
+            continue
+            
+        
+        
+        sets = [[vertex, edge] for vertex, edge in updated_graph_dict.items()]          #Eulerian Path
+        
+        for vertex in sets:
+            edges_dict = {}
+            current_vertex_edges = vertex[-1][:]
+            for lst in sets:
+                for number in lst[-1]:
+                    if not number in edges_dict:
+                        edges_dict[number] = False
+            edges_dict['last_element'] = False
+            while len(vertex[-1]) != 0:
+                if len(sets[-1][-1]) <= 1:
+                    last_edge = None 
+                else: 
+                    last_edge = sets[-1][-1][-1]
+                last_vertex = sets[-1][0]
+                output = dfs(updated_graph_dict, vertex[0], edges_dict, last_edge, last_vertex)
+                
+                paths.append(output)
+                vertex[-1].pop(0)
+                for key in edges_dict.keys():
+                    edges_dict[key] = False
+            
+            vertex[-1] = current_vertex_edges
+            updated_graph_dict[vertex[0]] = current_vertex_edges
 
-        if eulerian_cycles:                                                                #Eulerian Cycle
-            for cycle in eulerian_cycles:
-                print("The graph has an Eulerian Cycle: {}".format(cycle))
+        eulerian_paths = eulerian_path_checker(updated_graph_dict, paths)[:2]
+
+        if eulerian_paths:
+            for path in eulerian_paths:
+                print("The graph has an Eulerian Path: {}".format(path))
+
+            eulerian_cycles = eulerian_cycle(updated_graph_dict, eulerian_paths)
+
+            if eulerian_cycles:                                                                #Eulerian Cycle
+                for cycle in eulerian_cycles:
+                    print("The graph has an Eulerian Cycle: {}".format(cycle))
+            else:
+                print("The graph does not have any Eulerian Cycles")
         else:
-            print("The graph does not have any Eulerian Cycles")
-    else:
-        print("The graph does not have any Eulerian Paths")
-    
+            print("The graph does not have any Eulerian Paths")
+        
 
 def eulerian_path_checker(graph, paths):
     eulerian_paths = []
@@ -149,4 +153,4 @@ def eulerian_cycle(graph, el_paths):
 
 
 
-print(eulerian(g1))
+print(eulerian(g1, g2))
