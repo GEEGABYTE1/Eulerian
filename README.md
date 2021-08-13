@@ -5,7 +5,7 @@ Eulerian Path and Cycle Detection Algorithm with implementation of Graph Depth-F
 # Eulerian Path ⤴️
 The Eulerian Path is a path that visits every edge exactly once. There are two conditions that must be true for a graph to be Eulerian:
   - a) All vertices with non-zero degrees are connected. We don't care about vertices that have no edges becase they would be separate from the overall graph.
- -  b) If zero or two vertices have odd degrees and all other vertices have even degrees (check `More Information` to see the definitions of both *even* and *odd* degrees of a vertex). Not that only one vertex with an odd degree is not possible in an unidrected graph (sum of all degrees is always even in an undirected graph).
+ -  b) If zero or two vertices have odd degrees and all other vertices have even degrees (check `More Information` to see the definitions of both *even* and *odd* degrees of a vertex). Note that only one vertex with an odd degree is not possible in an unidrected graph (sum of all degrees is always even in an undirected graph).
  
 *Note: A Graph with no edges is considered Eulerian because there are no edges to traverse*
 
